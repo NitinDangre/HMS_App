@@ -3,6 +3,7 @@ package com.hms.services.Impl;
 import com.hms.entity.AppUser_hms;
 import com.hms.payload.LoginDto;
 import com.hms.repository.AppUserHmsRepository;
+import com.hms.services.JWTServices;
 import com.hms.services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,27 @@ public class UserServiceImpl  implements UserServices {
     //private ModelMapper mapper;
 
     private AppUserHmsRepository userRepo;
+    private JWTServices jwtService;
 
-    public UserServiceImpl(AppUserHmsRepository userRepo) {
+    public UserServiceImpl(AppUserHmsRepository userRepo,JWTServices jwtService) {
         this.userRepo = userRepo;
+        this.jwtService = jwtService;
       //  this.mapper=mapper;
     }
 
-    public boolean verifyLogin(LoginDto dto) {
+    public String verifyLogin(LoginDto dto) {
         Optional<AppUser_hms> opUser = userRepo.findByUsername(dto.getUsername());
         if (opUser.isPresent()) {
             AppUser_hms appUser = opUser.get();
-            return BCrypt.checkpw(dto.getPassword(), appUser.getPassword());
+            if( BCrypt.checkpw(dto.getPassword(), appUser.getPassword())){
+                //Generate Token
+               String token = jwtService.generateToken(appUser.getUsername());
+                return token;
+            }
         } else {
-            return false;
+            return null;
         }
+        return null;
     }
 
 //
