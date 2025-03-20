@@ -2,6 +2,7 @@ package com.hms.controller;
 
 import com.hms.entity.AppUser_hms;
 import com.hms.payload.LoginDto;
+import com.hms.payload.TokenDto;
 import com.hms.repository.AppUserHmsRepository;
 import com.hms.services.Impl.UserServiceImpl;
 import com.hms.services.UserServices;
@@ -47,10 +48,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto Dto){
-       boolean status=userService.verifyLogin(Dto);
-       if(status){
-          return new ResponseEntity<>("User Loggedin",HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestBody LoginDto Dto){
+       String token=userService.verifyLogin(Dto);
+       if(token!=null){
+           TokenDto tokenDto=new TokenDto();
+           tokenDto.setToken(token);
+           tokenDto.setType("JWT");
+          return new ResponseEntity<>(tokenDto,HttpStatus.OK);
        }else{
            return new ResponseEntity<>("Invalid Login Credential",HttpStatus.FORBIDDEN);
        }

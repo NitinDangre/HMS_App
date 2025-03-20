@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 
 
 public interface UserServices {
-    boolean verifyLogin(LoginDto dto);
+    String verifyLogin(LoginDto dto);
 
 }
