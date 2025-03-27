@@ -1,12 +1,11 @@
 package com.hms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+
 @Entity
 @Table(name = "app_user_hms")
 public class AppUser_hms {
@@ -27,6 +26,11 @@ public class AppUser_hms {
     //@JsonIgnore
     @Column(name = "password", nullable = false, length = 1000)
     private String password;
+
+
+    @Column(name = "role", nullable = false, length = 20)
+    private String role;
+
 
     public Long getId() {
         return id;
@@ -66,5 +70,13 @@ public class AppUser_hms {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

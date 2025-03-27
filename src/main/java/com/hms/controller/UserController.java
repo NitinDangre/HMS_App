@@ -43,6 +43,7 @@ public class UserController {
 
         String encryptedPass=BCrypt.hashpw(user.getPassword(),BCrypt.gensalt(5));
         user.setPassword(encryptedPass);
+        user.setRole("ROLE_USER");
         AppUser_hms saveUser=userRepository.save(user);
         return new ResponseEntity<>(saveUser,HttpStatus.CREATED);
     }
@@ -59,5 +60,25 @@ public class UserController {
            return new ResponseEntity<>("Invalid Login Credential",HttpStatus.FORBIDDEN);
        }
        }
+
+
+    @PostMapping("/signUp-property-owner")
+    public ResponseEntity<?> createPropertyOwnerUser(@RequestBody AppUser_hms user){
+        Optional<AppUser_hms> opUser=userRepository.findByUsername(user.getUsername());
+        if(opUser.isPresent()){
+            return new ResponseEntity<>("username Already Present ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        Optional<AppUser_hms> opEmail=userRepository.findByEmail(user.getEmail());
+        if(opEmail.isPresent()){
+            return new ResponseEntity<>("Email Already Present ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        String encryptedPass=BCrypt.hashpw(user.getPassword(),BCrypt.gensalt(5));
+        user.setPassword(encryptedPass);
+        user.setRole("ROLE_OWNER");
+        AppUser_hms saveUser=userRepository.save(user);
+        return new ResponseEntity<>(saveUser,HttpStatus.CREATED);
     }
+
+}
 

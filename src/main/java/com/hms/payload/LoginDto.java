@@ -3,16 +3,13 @@ package com.hms.payload;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class LoginDto {
-    public String getPassword() {
-        return Password;
-    }
 
-    public void setPassword(String password) {
-        Password = password;
-    }
+    private String username;
+    private String Password;
+    private String role;
 
     public String getUsername() {
         return username;
@@ -22,6 +19,19 @@ public class LoginDto {
         this.username = username;
     }
 
-    private String username;
-    private String Password;
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

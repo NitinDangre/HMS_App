@@ -9,12 +9,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -39,13 +42,26 @@ public class JWTFilter extends OncePerRequestFilter {
             String Username=jwtService.getUserName(TokenValue);
             System.out.println("Username:::"+Username);
             Optional<AppUser_hms> opsUser= userHmsRepository.findByUsername(Username);
+
             if(opsUser.isPresent()){
                 AppUser_hms appUser= opsUser.get();
-                UsernamePasswordAuthenticationToken authenticationToken=
-                        new UsernamePasswordAuthenticationToken(appUser,null,null);
-                authenticationToken.setDetails(new WebAuthenticationDetails(request));
+                System.out.println("UserRole:::"+appUser.getRole());
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(appUser, null,
+                                Collections.singleton(new SimpleGrantedAuthority(appUser.getRole())));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                System.out.println("Authenticated User Roles: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null) {
+                    System.out.println("Authenticated User: " + authentication.getName());
+                    System.out.println("Authorities: " + authentication.getAuthorities());
+                }
+
             }
+        }else {
+            // Handle invalid token case
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+            return;
         }
         filterChain.doFilter(request,response);
 
