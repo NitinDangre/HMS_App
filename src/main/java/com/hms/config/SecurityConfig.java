@@ -24,16 +24,19 @@ public class SecurityConfig {
         http.csrf().disable().cors().disable();
 
         //haap
-        //http.authorizeHttpRequests().anyRequest().permitAll();  permit all request
-        //now want to permit spacific request or role base user
-        http.authorizeHttpRequests()
-                .requestMatchers("api/v1/users/login","api/v1/users/signUp","api/v1/users/signUp-property-owner")
-                .permitAll()
-                .requestMatchers("api/v1/country/addCountry")
-                .hasAnyRole("OWNER","ADMIN")
-                .anyRequest().authenticated();
+
         //JWT Token Filter
         http.addFilterBefore(jwtFilter, AuthorizationFilter.class);
+        //permit all request
+        http.authorizeHttpRequests().anyRequest().permitAll();
+        //now want to permit spacific request or role base user
+//        http.authorizeHttpRequests()
+//                .requestMatchers("api/v1/users/login","api/v1/users/signUp","api/v1/users/signUp-property-owner")
+//                .permitAll()
+//                .requestMatchers("api/v1/country/addCountry")
+//                .hasRole("OWNER")
+//                .anyRequest().authenticated();
+
         return http.build();
     }
 

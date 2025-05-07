@@ -30,6 +30,7 @@ public class UserServiceImpl  implements UserServices {
             AppUser_hms appUser = opUser.get();
             if( BCrypt.checkpw(dto.getPassword(), appUser.getPassword())){
                 //Generate Token
+                System.out.println(appUser.getUsername()+"User Token geeting");
                String token = jwtService.generateToken(appUser.getUsername());
                 return token;
             }

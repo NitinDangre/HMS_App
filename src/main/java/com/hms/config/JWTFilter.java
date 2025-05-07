@@ -49,6 +49,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(appUser, null,
                                 Collections.singleton(new SimpleGrantedAuthority(appUser.getRole())));
+                authenticationToken.setDetails(new WebAuthenticationDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 System.out.println("Authenticated User Roles: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,12 +57,7 @@ public class JWTFilter extends OncePerRequestFilter {
                     System.out.println("Authenticated User: " + authentication.getName());
                     System.out.println("Authorities: " + authentication.getAuthorities());
                 }
-
             }
-        }else {
-            // Handle invalid token case
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-            return;
         }
         filterChain.doFilter(request,response);
 

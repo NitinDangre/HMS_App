@@ -3,9 +3,10 @@ package com.hms.repository;
 
 import com.hms.entity.AppUser_hms;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 //import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.util.Optional;
-
+@Repository
 public interface AppUserHmsRepository extends JpaRepository<AppUser_hms, Long> {
 
     //AppUser_hms createPost(AppUser_hms user) ;
